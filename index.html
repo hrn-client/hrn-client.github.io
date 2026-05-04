@@ -1,360 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRN Client | Eaglercraft 1.8.8</title>
+    <title>HRN Client | 1.8.8</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-dark: #000000;
-            --accent: #ff3b3b;
-            --glass: rgba(0, 0, 0, 0.6);
-            --border: rgba(255, 255, 255, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: white;
-            overflow-x: hidden;
-        }
-
-        /* --- BACKGROUND LAYERS --- */
+        :root { --bg: #000; --txt: #fff; --border: rgba(255,255,255,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--txt); overflow-x: hidden; text-align: center; }
         
-        /* Layer 1: The Image */
-        .bg-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            background-image: url('https://cdn.jsdelivr.net/gh/free-whiteboard-online/Free-Erasorio-Alternative-for-Collaborative-Design@212f1b68b7aab16e6659a648a73d5681c66a7648/uploads/2026-05-04T18-02-15-431Z-rm6tobdoj.png');
-            background-size: cover;
-            background-position: center;
+        /* Background & Hero BG */
+        .bg-gradient { position: fixed; inset: 0; background: radial-gradient(circle at 50% 30%, #111 0%, #000 70%); z-index: -2; }
+        
+        .hero-bg-wrapper { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100vh; 
+            overflow: hidden; z-index: -1; pointer-events: none;
+        }
+        .hero-bg-image { 
+            width: 100%; height: 100%; object-fit: cover; 
+            filter: blur(8px) brightness(0.4) saturate(1.2); 
+            opacity: 0.5; transform: scale(1.1);
         }
 
-        /* Layer 2: Dark Overlay for readability */
-        .bg-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.9));
+        /* Navigation */
+        .notch-nav { 
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; 
+            display: flex; align-items: center; gap: 40px; background: rgba(0,0,0,0.1); backdrop-filter: blur(20px); 
+            padding: 12px 30px; border-radius: 12px; border: 1px solid var(--border); width: fit-content; max-width: 95%;
+        }
+        .logo-area { display: flex; align-items: center; gap: 10px; font-weight: 900; letter-spacing: 3px; font-size: 0.75rem; text-transform: uppercase; }
+        
+        .btn-launch-top { 
+            text-transform: uppercase; font-weight: 900; letter-spacing: 2px; font-size: 0.7rem; 
+            color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.3); 
+            padding: 6px 15px; border-radius: 4px; transition: 0.3s;
+        }
+        .btn-launch-top:hover { background: white; color: black; border-color: white; }
+
+        /* Hero Section & Animations */
+        .hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 140px 20px 80px; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- THE "NOTCH" NAVIGATION --- */
-        .notch-nav {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 12px 30px;
-            border-radius: 50px;
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        .main-feather { width: clamp(100px, 15vw, 150px); margin-bottom: 30px; filter: drop-shadow(0 0 40px rgba(255,255,255,0.2)); animation: fadeInUp 0.8s ease-out forwards; }
+        h1 { font-size: clamp(2.2rem, 9vw, 5rem); font-weight: 900; letter-spacing: 8px; text-transform: uppercase; margin-bottom: 20px; text-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: fadeInUp 1s ease-out forwards; }
+        .hero p { font-size: 0.9rem; color: rgba(255,255,255,0.6); max-width: 480px; margin-bottom: 40px; line-height: 1.8; letter-spacing: 1px; animation: fadeInUp 1.2s ease-out forwards; }
+        .btn-group { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; animation: fadeInUp 1.4s ease-out forwards; }
+
+        /* Buttons Main */
+        .btn-main { border: 1px solid white; color: white; padding: 14px 35px; border-radius: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; text-decoration: none; transition: 0.3s; backdrop-filter: blur(5px); }
+        .btn-main.fill { background: white; color: black; }
+        .btn-main:hover { background: white; color: black; }
+
+        /* Infinite Scroll Band */
+        .infinite-band { width: 100%; overflow: hidden; padding: 60px 0; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); position: relative; margin: 40px 0; }
+        .scroll-container { display: flex; width: calc(300px * 12); animation: scroll 40s linear infinite; }
+        .scroll-container img { width: 300px; aspect-ratio: 16/9; object-fit: cover; margin: 0 10px; border-radius: 4px; border: 1px solid var(--border); filter: grayscale(1); transition: 0.4s; }
+        .scroll-container img:hover { filter: grayscale(0); border-color: white; transform: scale(1.05); }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-300px * 6 - 120px)); }
         }
 
-        .logo-text {
-            font-weight: 700;
-            font-size: 1.1rem;
-            letter-spacing: -0.5px;
-        }
+        /* Feature Section */
+        .features { padding: 100px 20px; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
+        .card { border-top: 1px solid var(--border); padding-top: 30px; text-align: left; transition: 0.3s; }
+        .card:hover { border-top-color: white; }
+        .card h3 { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; color: rgba(255,255,255,0.7); }
+        .card p { font-size: 0.8rem; color: rgba(255,255,255,0.3); line-height: 1.7; }
 
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
+        footer { padding: 80px 20px; color: rgba(255,255,255,0.1); font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; }
 
-        .nav-link {
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .nav-link:hover {
-            color: white;
-        }
-
-        .btn-nav {
-            background: white;
-            color: black;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .btn-nav:hover {
-            background: #e0e0e0;
-            transform: scale(1.02);
-        }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-            position: relative;
-        }
-
-        .hero h1 {
-            font-size: clamp(4rem, 12vw, 10rem);
-            font-weight: 900;
-            letter-spacing: -4px;
-            line-height: 1;
-            margin-bottom: 10px;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .hero h1 span {
-            color: var(--accent);
-        }
-
-        .version-badge {
-            background: rgba(255,255,255,0.1);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-            display: inline-block;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.8);
-            max-width: 600px;
-            margin-bottom: 40px;
-            line-height: 1.6;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            padding: 15px 35px;
-            border-radius: 50px;
-            font-weight: 700;
-            text-decoration: none;
-            font-size: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.2s;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 59, 59, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            padding: 15px 35px;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 1rem;
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: 0.2s;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.15);
-        }
-
-        /* --- FEATURES GRID --- */
-        .features {
-            padding: 80px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 30px;
-            transition: 0.3s;
-        }
-
-        .card:hover {
-            background: rgba(255,255,255,0.08);
-            transform: translateY(-5px);
-            border-color: rgba(255,255,255,0.2);
-        }
-
-        .icon-box {
-            width: 50px;
-            height: 50px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            color: var(--accent);
-        }
-
-        .card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .card p {
-            color: rgba(255,255,255,0.6);
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        /* Footer */
-        footer {
-            padding: 40px 20px;
-            text-align: center;
-            border-top: 1px solid var(--border);
-            margin-top: 40px;
-            color: rgba(255,255,255,0.4);
-            font-size: 0.85rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            .notch-nav {
-                width: 90%;
-                justify-content: center;
-            }
-            .btn-nav {
-                display: none;
-            }
-            .hero h1 {
-                letter-spacing: -2px;
-            }
-        }
+        @media (max-width: 768px) { .nav-links { display: none; } .features { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
+    <div class="bg-gradient"></div>
 
-    <!-- BACKGROUND -->
-    <div class="bg-image"></div>
-    <div class="bg-overlay"></div>
-
-    <!-- THE "NOTCH" NAVIGATION -->
     <nav class="notch-nav">
-        <div class="logo-text">HRN Client</div>
-        
-        <div class="nav-links">
-            <a href="#" class="nav-link">Home</a>
-            <a href="#features" class="nav-link">Features</a>
-            <a href="https://github.com/un-zynq/hrn-client" target="_blank" class="nav-link">GitHub</a>
+        <div class="logo-area">
+            <svg width="18" height="18" viewBox="15 0 192 192"><path fill="#fff" d="M55.5,128.2 C64,108.1 75.3,91.8 92.1,78.6 C115.4,60.5 142,53.7 171.3,56.2 C162.8,50.5 153.4,48.2 143.7,46.5 C138.8,45.7 135.1,48.3 131.2,50.5 C130.5,50.8 129.7,51.4 129,50.6 C128.5,49 131.1,48.3 129.9,46.5 C110.8,44.9 97.5,53.4 88.8,70.5 C87.8,67.8 88.9,66.1 89.4,64.2 C89.9,62.4 91.6,60.9 91,57.5 C70.6,69 55.1,82.6 57.4,109.3 C53.9,106.2 55,102.6 52.8,100 C51,109.6 51.4,118.4 55.5,128.2 Z M92.3,128.8 C97.6,125.5 102.4,121.7 106.4,115.6 C99.4,116 93.6,117.7 87.7,115.2 C105.6,113.5 118.1,102.7 130.3,90.7 C126.2,88.3 120.7,90.2 117,86.5 C118.2,85.4 119.5,85.5 120.6,85.7 C133.2,87.3 144.2,83.6 154.1,75.9 C157,73.7 160.3,72.1 163.4,70.1 C167.4,67.5 171.8,65.4 176.4,61.2 C150.6,59.8 127.7,65 106.8,78.1 C77.1,96.9 60.1,124.1 54.9,158.7 C57.1,154.5 58.9,150.1 60.6,145.7 C62.2,141.3 65.1,138.7 69.7,137.3 C77.2,135.1 84.8,133.2 92.3,128.8 Z"/></svg>
+            HRN
         </div>
-        
-        <a href="https://hrn-client.onrender.com/" target="_blank" class="btn-nav">Play Now</a>
+        <div class="flex gap-6 text-[0.6rem] font-bold uppercase tracking-widest text-white/40 nav-links">
+            <a href="#" class="hover:text-white transition">Home</a>
+            <a href="#features" class="hover:text-white transition">Features</a>
+            <a href="#gallery" class="hover:text-white transition">Showcase</a>
+        </div>
+        <a href="https://hrn-client.onrender.com/" target="_blank" class="btn-launch-top">Launch</a>
     </nav>
 
-    <!-- MAIN CONTENT -->
-    <main>
-        <!-- HERO -->
-        <section class="hero">
-            <div class="version-badge">Eaglercraft 1.8.8</div>
-            <h1>HRN <span>Client</span></h1>
-            <p>The ultimate web client. No downloads required, just pure performance. Play directly in your browser.</p>
-            
-            <div class="btn-group">
-                <!-- Primary Action: Play on Render -->
-                <a href="https://hrn-client.onrender.com/" target="_blank" class="btn-primary">
-                    Play Now
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                </a>
-                <!-- Secondary Action: Source Code -->
-                <a href="https://github.com/un-zynq/hrn-client" target="_blank" class="btn-secondary">
-                    Source Code
-                </a>
-            </div>
-        </section>
+    <section class="hero">
+        <div class="hero-bg-wrapper">
+            <img src="./assets/images/screenshot-4.png" class="hero-bg-image" alt="Background">
+        </div>
 
-        <!-- FEATURES -->
-        <section class="features" id="features">
-            
-            <div class="card">
-                <div class="icon-box">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                </div>
-                <h3>High Performance</h3>
-                <p>Optimized for the web. Experience smooth gameplay and high FPS directly in your browser.</p>
-            </div>
+        <svg class="main-feather" viewBox="15 0 192 192"><path fill="#fff" d="M55.5,128.2 C64,108.1 75.3,91.8 92.1,78.6 C115.4,60.5 142,53.7 171.3,56.2 C162.8,50.5 153.4,48.2 143.7,46.5 C138.8,45.7 135.1,48.3 131.2,50.5 C130.5,50.8 129.7,51.4 129,50.6 C128.5,49 131.1,48.3 129.9,46.5 C110.8,44.9 97.5,53.4 88.8,70.5 C87.8,67.8 88.9,66.1 89.4,64.2 C89.9,62.4 91.6,60.9 91,57.5 C70.6,69 55.1,82.6 57.4,109.3 C53.9,106.2 55,102.6 52.8,100 C51,109.6 51.4,118.4 55.5,128.2 Z M92.3,128.8 C97.6,125.5 102.4,121.7 106.4,115.6 C99.4,116 93.6,117.7 87.7,115.2 C105.6,113.5 118.1,102.7 130.3,90.7 C126.2,88.3 120.7,90.2 117,86.5 C118.2,85.4 119.5,85.5 120.6,85.7 C133.2,87.3 144.2,83.6 154.1,75.9 C157,73.7 160.3,72.1 163.4,70.1 C167.4,67.5 171.8,65.4 176.4,61.2 C150.6,59.8 127.7,65 106.8,78.1 C77.1,96.9 60.1,124.1 54.9,158.7 C57.1,154.5 58.9,150.1 60.6,145.7 C62.2,141.3 65.1,138.7 69.7,137.3 C77.2,135.1 84.8,133.2 92.3,128.8 Z"/></svg>
+        <h1>HRN CLIENT</h1>
+        <p>A high-performance Eaglercraft environment. Built with precision, focused on pure, uninterrupted gameplay.</p>
+        <div class="btn-group">
+            <a href="https://hrn-client.onrender.com/" target="_blank" class="btn-main fill">Launch App</a>
+            <a href="https://github.com/un-zynq/hrn-client" target="_blank" class="btn-main">Source Code</a>
+        </div>
+    </section>
 
-            <div class="card">
-                <div class="icon-box">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                </div>
-                <h3>Accessible Anywhere</h3>
-                <p>No installation needed. Whether you're on a restrictive network or a shared device, just click and play.</p>
-            </div>
+    <section class="infinite-band" id="gallery">
+        <div class="scroll-container">
+            <img src="./assets/images/screenshot-1.png" alt="HRN Gameplay 1">
+            <img src="./assets/images/screenshot-2.png" alt="HRN Gameplay 2">
+            <img src="./assets/images/screenshot-3.png" alt="HRN Gameplay 3">
+            <img src="./assets/images/screenshot-4.png" alt="HRN Gameplay 4">
+            <img src="./assets/images/screenshot-5.png" alt="HRN Gameplay 5">
+            <img src="./assets/images/screenshot-6.png" alt="HRN Gameplay 6">
+            <img src="./assets/images/screenshot-1.png" alt="HRN Gameplay 1">
+            <img src="./assets/images/screenshot-2.png" alt="HRN Gameplay 2">
+            <img src="./assets/images/screenshot-3.png" alt="HRN Gameplay 3">
+            <img src="./assets/images/screenshot-4.png" alt="HRN Gameplay 4">
+            <img src="./assets/images/screenshot-5.png" alt="HRN Gameplay 5">
+            <img src="./assets/images/screenshot-6.png" alt="HRN Gameplay 6">
+        </div>
+    </section>
 
-            <div class="card">
-                <div class="icon-box">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                </div>
-                <h3>Open Source</h3>
-                <p>Fully transparent and open for contributions. Check out the code on GitHub and join the development.</p>
-            </div>
-
-        </section>
-    </main>
+    <section class="features" id="features">
+        <div class="card">
+            <h3>01 / Speed</h3>
+            <p>Maximum frame stability. Minimal overhead. Zero bloat. Experience 1.8.8 at its peak.</p>
+        </div>
+        <div class="card">
+            <h3>02 / Access</h3>
+            <p>Your workspace, anywhere. No Java installation needed. Fully web-native architecture.</p>
+        </div>
+        <div class="card">
+            <h3>03 / Trust</h3>
+            <p>100% Open Source. Community-driven and fully transparent. Audit every line of code.</p>
+        </div>
+    </section>
 
     <footer>
-        HRN Client &copy; 2026. Built for Eaglercraft 1.8.8.
+        &copy; 2026 HRN / MINIMALIST WEB ENVIRONMENT
     </footer>
 
 </body>
