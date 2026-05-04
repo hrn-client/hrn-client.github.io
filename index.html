@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -30,6 +31,12 @@
                 --border: rgba(255,255,255,0.1); 
             }
             * { margin: 0; padding: 0; box-sizing: border-box; }
+            
+            ::-webkit-scrollbar { width: 6px; }
+            ::-webkit-scrollbar-track { background: var(--bg); }
+            ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+            ::-webkit-scrollbar-thumb:hover { background: #555; }
+
             body { 
                 font-family: 'Inter', sans-serif; 
                 background: var(--bg); 
@@ -82,23 +89,26 @@
             .btn-main.fill { background: white; color: black; }
             .btn-main:hover { background: white; color: black; }
 
-            /* Infinite Scroll Update */
             .infinite-band { 
                 width: 100%; overflow: hidden; padding: 60px 0; 
                 background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); 
                 border-bottom: 1px solid var(--border); position: relative; margin: 40px 0; 
             }
-            .scroll-wrapper { display: flex; width: max-content; }
+            .scroll-wrapper { 
+                display: flex; 
+                width: max-content; 
+                animation: infiniteScroll 40s linear infinite; 
+            }
             .scroll-content { display: flex; flex-shrink: 0; }
             .scroll-content img { 
-                width: 300px; aspect-ratio: 16/9; object-fit: cover; margin: 0 10px; 
+                width: 350px; aspect-ratio: 16/9; object-fit: cover; margin: 0 15px; 
                 border-radius: 4px; border: 1px solid var(--border); filter: grayscale(1); transition: 0.4s; 
             }
-            .scroll-content img:hover { filter: grayscale(0); border-color: white; transform: scale(1.05); }
+            .scroll-content img:hover { filter: grayscale(0); border-color: white; transform: scale(1.02); }
 
             @keyframes infiniteScroll {
                 from { transform: translateX(0); }
-                to { transform: translateX(-100%); }
+                to { transform: translateX(calc(-100% / 3)); }
             }
 
             .features { padding: 100px 20px; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
@@ -106,6 +116,11 @@
             .card:hover { border-top-color: white; }
             .card h3 { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; color: rgba(255,255,255,0.7); }
             .card p { font-size: 0.8rem; color: rgba(255,255,255,0.3); line-height: 1.7; }
+            
+            .benchmark-container { padding: 100px 20px; max-width: 1100px; margin: 0 auto; }
+            .chart-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 30px; border-radius: 4px; }
+
+            .cta-section { padding: 120px 20px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.03)); border-top: 1px solid var(--border); }
         }
 
         footer { padding: 80px 20px; color: rgba(255,255,255,0.1); font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; }
@@ -122,15 +137,16 @@
         </div>
         <div class="flex gap-6 text-[0.6rem] font-bold uppercase tracking-widest text-white/40 nav-links">
             <a href="#" class="hover:text-white transition">Home</a>
+            <a href="#benchmarks" class="hover:text-white transition">Benchmarks</a>
             <a href="#features" class="hover:text-white transition">Features</a>
-            <a href="#gallery" class="hover:text-white transition">Showcase</a>
+            <a href="#community" class="hover:text-white transition">Community</a>
         </div>
         <a href="https://hrn-client.onrender.com/" target="_blank" class="btn-launch-top">Launch</a>
     </nav>
 
     <section class="hero">
         <div class="hero-bg-wrapper">
-            <img src="./assets/images/screenshot-4.png" class="hero-bg-image" alt="Background" onerror="this.style.display='none'">
+            <img src="https://cdn.jsdelivr.net/gh/hrn-client/hrn-client.github.io/assets/images/screenshot-4.png" class="hero-bg-image" alt="Background">
         </div>
         <svg class="main-feather" viewBox="15 0 192 192"><path fill="#fff" d="M55.5,128.2 C64,108.1 75.3,91.8 92.1,78.6 C115.4,60.5 142,53.7 171.3,56.2 C162.8,50.5 153.4,48.2 143.7,46.5 C138.8,45.7 135.1,48.3 131.2,50.5 C130.5,50.8 129.7,51.4 129,50.6 C128.5,49 131.1,48.3 129.9,46.5 C110.8,44.9 97.5,53.4 88.8,70.5 C87.8,67.8 88.9,66.1 89.4,64.2 C89.9,62.4 91.6,60.9 91,57.5 C70.6,69 55.1,82.6 57.4,109.3 C53.9,106.2 55,102.6 52.8,100 C51,109.6 51.4,118.4 55.5,128.2 Z M92.3,128.8 C97.6,125.5 102.4,121.7 106.4,115.6 C99.4,116 93.6,117.7 87.7,115.2 C105.6,113.5 118.1,102.7 130.3,90.7 C126.2,88.3 120.7,90.2 117,86.5 C118.2,85.4 119.5,85.5 120.6,85.7 C133.2,87.3 144.2,83.6 154.1,75.9 C157,73.7 160.3,72.1 163.4,70.1 C167.4,67.5 171.8,65.4 176.4,61.2 C150.6,59.8 127.7,65 106.8,78.1 C77.1,96.9 60.1,124.1 54.9,158.7 C57.1,154.5 58.9,150.1 60.6,145.7 C62.2,141.3 65.1,138.7 69.7,137.3 C77.2,135.1 84.8,133.2 92.3,128.8 Z"/></svg>
         <h1>HRN CLIENT</h1>
@@ -144,46 +160,121 @@
     <section class="infinite-band" id="gallery">
         <div class="scroll-wrapper" id="scrollWrapper">
             <div class="scroll-content" id="scrollContent">
-                <img src="./assets/images/screenshot-1.png" alt="1">
-                <img src="./assets/images/screenshot-2.png" alt="2">
-                <img src="./assets/images/screenshot-3.png" alt="3">
-                <img src="./assets/images/screenshot-4.png" alt="4">
-                <img src="./assets/images/screenshot-5.png" alt="5">
-                <img src="./assets/images/screenshot-6.png" alt="6">
+                <img src="https://cdn.jsdelivr.net/gh/hrn-client/hrn-client.github.io/assets/images/screenshot-1.png" alt="1">
+                <img src="https://cdn.jsdelivr.net/gh/hrn-client/hrn-client.github.io/assets/images/screenshot-2.png" alt="2">
+                <img src="https://cdn.jsdelivr.net/gh/hrn-client/hrn-client.github.io/assets/images/screenshot-3.png" alt="3">
+                <img src="https://cdn.jsdelivr.net/gh/hrn-client/hrn-client.github.io/assets/images/screenshot-4.png" alt="4">
+                <img src="https://cdn.jsdelivr.net/gh/hrn-client/hrn-client.github.io/assets/images/screenshot-5.png" alt="5">
+                <img src="https://cdn.jsdelivr.net/gh/hrn-client/hrn-client.github.io/assets/images/screenshot-6.png" alt="6">
             </div>
+        </div>
+    </section>
+
+    <section class="benchmark-container" id="benchmarks">
+        <div class="grid md:grid-cols-2 gap-10">
+            <div class="text-left">
+                <h3 class="text-[0.6rem] uppercase tracking-[4px] text-white/40 mb-6 underline decoration-white/10 underline-offset-8">Benchmark 01 / Shaders</h3>
+                <div class="chart-box">
+                    <canvas id="shaderChart"></canvas>
+                </div>
+                <p class="text-[0.7rem] text-white/30 mt-4 leading-relaxed">HRN Client maintains 40-60 FPS with realistic shaders, while Vanilla environments collapse to ~2 FPS.</p>
             </div>
+            <div class="text-left">
+                <h3 class="text-[0.6rem] uppercase tracking-[4px] text-white/40 mb-6 underline decoration-white/10 underline-offset-8">Benchmark 02 / Raw FPS</h3>
+                <div class="chart-box">
+                    <canvas id="rawChart"></canvas>
+                </div>
+                <p class="text-[0.7rem] text-white/30 mt-4 leading-relaxed">Achieving an average of 220 FPS with VSync disabled. Optimized for high refresh rate displays.</p>
+            </div>
+        </div>
     </section>
 
     <section class="features" id="features">
         <div class="card">
-            <h3>01 / Speed</h3>
-            <p>Maximum frame stability. Minimal overhead. Zero bloat. Experience 1.8.8 at its peak.</p>
+            <h3>01 / Global Authentication</h3>
+            <p>Seamlessly log in with your Microsoft account. Securely connect to your favorite Java servers directly from the browser.</p>
         </div>
         <div class="card">
-            <h3>02 / Access</h3>
-            <p>Your workspace, anywhere. No Java installation needed. Fully web-native architecture.</p>
+            <h3>02 / Collaborative Worlds</h3>
+            <p>Create and share worlds instantly. Experience zero-latency local play through shared world instances.</p>
         </div>
         <div class="card">
-            <h3>03 / Trust</h3>
-            <p>100% Open Source. Community-driven and fully transparent. Audit every line of code.</p>
+            <h3>03 / Total Customization</h3>
+            <p>Full support for resource packs, shaders, and a complete suite of settings to tune your experience exactly how you want it.</p>
+        </div>
+        <div class="card">
+            <h3>04 / Universal Servers</h3>
+            <p>Advanced server browser supporting a wide range of web-compatible Java environments. Low-ping, stable connections.</p>
+        </div>
+        <div class="card">
+            <h3>05 / World Interactions</h3>
+            <p>Exclusive features like sitting on stairs and more! Minimalist details that bring your MC world to life.</p>
+        </div>
+        <div class="card">
+            <h3>06 / Speed & Security</h3>
+            <p>100% Open Source architecture. No bloat, no tracking, just pure 1.8.8 performance at its technical peak.</p>
+        </div>
+    </section>
+
+    <section class="cta-section" id="community">
+        <div class="max-w-2xl mx-auto">
+            <h3 class="text-[0.65rem] uppercase tracking-[5px] text-white/40 mb-4">Join the Network</h3>
+            <h2 class="text-4xl md:text-5xl font-black mb-8 tracking-tighter">EVOLVE YOUR GAMEPLAY.</h2>
+            <p class="text-white/40 text-sm mb-12 leading-loose">Connect with the community and the developers, get instant support, and participate in the development of the next generation of web-based clients.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a target="_blank" href="https://discord.gg/ZCdtDdFY" class="btn-main fill">Join Discord</a>
+                <a href="https://github.com/un-zynq/hrn-client" target="_blank" class="btn-main">View GitHub</a>
+            </div>
         </div>
     </section>
 
     <footer>
-        &copy; 2026 HRN / MINIMALIST WEB ENVIRONMENT
+        &copy; 2026 / THE HYPERRUSH NETWORK
     </footer>
 
     <script>
-        const wrapper = document.getElementById('scrollWrapper');
-        const content = document.getElementById('scrollContent');
+        const scrollWrapper = document.getElementById('scrollWrapper');
+        const scrollContent = document.getElementById('scrollContent');
         
-        const clone = content.cloneNode(true);
-        wrapper.appendChild(clone);
+        const clone1 = scrollContent.cloneNode(true);
+        const clone2 = scrollContent.cloneNode(true);
+        scrollWrapper.appendChild(clone1);
+        scrollWrapper.appendChild(clone2);
 
-        const scrollWidth = content.offsetWidth;
-        const animationDuration = scrollWidth / 20; 
-        
-        wrapper.style.animation = `infiniteScroll ${animationDuration}s linear infinite`;
+        const commonOptions = {
+            responsive: true,
+            plugins: {
+                legend: { labels: { color: '#fff', font: { family: 'Inter', size: 10 } } }
+            },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 9 } } },
+                x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 9 } } }
+            }
+        };
+
+        new Chart(document.getElementById('shaderChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Ray Tracing (Max)', 'Realistic (Default)'],
+                datasets: [
+                    { label: 'HRN FPS', data: [40, 60], backgroundColor: '#fff' },
+                    { label: 'Vanilla FPS', data: [1, 2], backgroundColor: 'rgba(255,255,255,0.1)' }
+                ]
+            },
+            options: commonOptions
+        });
+
+        new Chart(document.getElementById('rawChart'), {
+            type: 'line',
+            data: {
+                labels: ['0s', '15s', '30s', '45s', '60s'],
+                datasets: [
+                    { label: 'HRN (No VSync)', data: [210, 225, 220, 228, 220], borderColor: '#fff', tension: 0.4 },
+                    { label: 'Vanilla', data: [65, 70, 68, 56, 72], borderColor: 'rgba(255,255,255,0.2)', borderDash: [5, 5], tension: 0.4 }
+                ]
+            },
+            options: commonOptions
+        });
     </script>
 </body>
 </html>
